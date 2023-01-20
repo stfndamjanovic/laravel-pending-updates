@@ -64,6 +64,10 @@ class Postponer
 
         $this->validateTimestamp($date);
 
+        if ($this->startAt) {
+            throw InvalidPostponeParametersException::create();
+        }
+
         $this->startAt = $date->format(self::DATE_FORMAT);
 
         return $this;
@@ -74,6 +78,10 @@ class Postponer
         $date = Carbon::parse($timestamp);
 
         $this->validateTimestamp($date);
+
+        if ($this->revertAt) {
+            throw InvalidPostponeParametersException::create();
+        }
 
         $this->revertAt = $date->format(self::DATE_FORMAT);
 

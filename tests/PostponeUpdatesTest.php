@@ -293,3 +293,31 @@ it('will fail if there is combination of revert at and keep for', function () {
         ->keepForMinutes(10)
         ->update(['name' => 'Stefan']);
 })->throws(InvalidPostponeParametersException::class);
+
+it('will fail if keep for method is used twice', function () {
+    $this->model->postponer()
+        ->keepForMinutes(10)
+        ->keepForDays(1)
+        ->update(['name' => 'Stefan']);
+})->throws(InvalidPostponeParametersException::class);
+
+it('will fail if delay for method is used twice', function () {
+    $this->model->postponer()
+        ->delayForMinutes(10)
+        ->delayForDays(1)
+        ->update(['name' => 'Stefan']);
+})->throws(InvalidPostponeParametersException::class);
+
+it('will fail if start from method is used twice', function () {
+    $this->model->postponer()
+        ->startFrom("2023-12-31 23:59:59")
+        ->startFrom("2023-11-31 23:59:59")
+        ->update(['name' => 'Stefan']);
+})->throws(InvalidPostponeParametersException::class);
+
+it('will fail if revert at method is used twice', function () {
+    $this->model->postponer()
+        ->revertAt("2023-12-31 23:59:59")
+        ->revertAt("2023-11-31 23:59:59")
+        ->update(['name' => 'Stefan']);
+})->throws(InvalidPostponeParametersException::class);
