@@ -28,8 +28,8 @@ trait HasPostponedUpdates
             }
 
             // If postponed update already exists, remove that one and create another one
-            if ($postponedUpdate = $model->postponedUpdate()->first()) {
-                $postponedUpdate->delete();
+            if ($model->hasPendingUpdate()) {
+                $model->postponedUpdate()->delete();
             }
 
             $model->postponedUpdate()->create([
@@ -51,7 +51,7 @@ trait HasPostponedUpdates
 
     public function postponedUpdate()
     {
-        return $this->morphOne(self::getPostponedUpdateModelClassName(), 'parent');
+        return $this->morphOne($this->getPostponedUpdateModelClassName(), 'parent');
     }
 
     public function postponer()
@@ -59,8 +59,13 @@ trait HasPostponedUpdates
         return $this->postponer = new Postponer($this);
     }
 
-    protected static function getPostponedUpdateModelClassName()
+    protected function getPostponedUpdateModelClassName()
     {
         return config('postpone-updates.model');
+    }
+
+    public function hasPendingUpdate()
+    {
+        return $this->postponedUpdate()->exists();
     }
 }
