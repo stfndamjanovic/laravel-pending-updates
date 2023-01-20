@@ -11,15 +11,13 @@ class Postponer
 {
     use ForwardsCalls;
 
+    const DATE_FORMAT = 'Y-m-d H:i:s';
+
     protected $model;
 
-    protected $startTime;
+    protected $delayFor;
 
-    protected $startTimeUnit;
-
-    protected $endTime;
-
-    protected $endTimeUnit;
+    protected $keepFor;
 
     protected $startAt;
 
@@ -32,32 +30,32 @@ class Postponer
 
     public function keepForMinutes(int $minutes)
     {
-        return $this->setEndAtProperty($minutes, 'minute');
+        return $this->setKeepForProperty($this->minutesToSeconds($minutes));
     }
 
     public function keepForHours(int $hours)
     {
-        return $this->setEndAtProperty($hours, 'hours');
+        return $this->setKeepForProperty($this->hoursToSeconds($hours));
     }
 
     public function keepForDays(int $days)
     {
-        return $this->setEndAtProperty($days, 'days');
+        return $this->setKeepForProperty($this->daysToSeconds($days));
     }
 
-    public function delayForMinutes(int $minites)
+    public function delayForMinutes(int $minutes)
     {
-        return $this->setStartAtProperty($minites, 'minute');
+        return $this->setDelayForProperty($this->minutesToSeconds($minutes));
     }
 
     public function delayForHours(int $hours)
     {
-        return $this->setStartAtProperty($hours, 'hours');
+        return $this->setDelayForProperty($this->hoursToSeconds($hours));
     }
 
     public function delayForDays(int $days)
     {
-        return $this->setStartAtProperty($days, 'days');
+        return $this->setDelayForProperty($this->daysToSeconds($days));
     }
 
     public function startFrom(string $timestamp)
@@ -66,7 +64,7 @@ class Postponer
 
         $this->validateTimestamp($date);
 
-        $this->startAt = $date->format('Y-m-d H:i:s');
+        $this->startAt = $date->format(self::DATE_FORMAT);
 
         return $this;
     }
@@ -77,7 +75,7 @@ class Postponer
 
         $this->validateTimestamp($date);
 
-        $this->revertAt = $date->format('Y-m-d H:i:s');
+        $this->revertAt = $date->format(self::DATE_FORMAT);
 
         return $this;
     }
@@ -89,46 +87,65 @@ class Postponer
         }
     }
 
-    protected function setStartAtProperty($amount, $unit)
+    protected function setDelayForProperty(int $seconds)
     {
-        $this->startTime = $amount;
+        if ($this->delayFor) {
+            throw InvalidPostponeParametersException::create();
+        }
 
-        $this->startTimeUnit = $unit;
+        $this->delayFor = $seconds;
 
         return $this;
     }
 
-    protected function setEndAtProperty($amount, $unit)
+    protected function setKeepForProperty(int $seconds)
     {
-        $this->endTime = $amount;
+        if ($this->keepFor) {
+            throw InvalidPostponeParametersException::create();
+        }
 
-        $this->endTimeUnit = $unit;
+        $this->keepFor = $seconds;
 
         return $this;
+    }
+
+    protected function minutesToSeconds(int $minutes)
+    {
+        return $minutes * 60;
+    }
+
+    protected function hoursToSeconds(int $hours)
+    {
+        return $hours * 60 * 60;
+    }
+
+    protected function daysToSeconds(int $days)
+    {
+        return $days * 60 * 60 * 24;
     }
 
     public function get()
     {
-        $startAt = null;
-        $revertAt = null;
-
-        if ($this->startAt) {
-            $startAt = $this->startAt;
+        if ($this->startAt && $this->delayFor) {
+            throw InvalidPostponeParametersException::create();
         }
 
-        if ($this->revertAt) {
-            $revertAt = $this->revertAt;
+        if ($this->revertAt && $this->keepFor) {
+            throw InvalidPostponeParametersException::create();
         }
 
-        if ($this->startTime) {
-            $startAt = Carbon::now()->add($this->startTimeUnit, $this->startTime);
+        $startAt = $this->startAt;
+        $revertAt = $this->revertAt;
+
+        if ($this->delayFor) {
+            $startAt = Carbon::now()->addSeconds($this->delayFor);
         }
 
-        if ($this->endTime) {
+        if ($this->keepFor) {
             if ($startAt) {
-                $revertAt = Carbon::parse($startAt)->add($this->endTimeUnit, $this->endTime);
+                $revertAt = Carbon::parse($startAt)->addSeconds($this->keepFor);
             } else {
-                $revertAt = Carbon::now()->add($this->endTimeUnit, $this->endTime);
+                $revertAt = Carbon::now()->addSeconds($this->keepFor);
             }
         }
 

@@ -279,3 +279,17 @@ it('will fail if date is in the past', function () {
         ->startFrom('2022-12-31 23:59:59')
         ->update(['name' => 'Stefan']);
 })->throws(InvalidPostponeParametersException::class);
+
+it('will fail if there is combination of start at and delay for', function () {
+    $this->model->postponer()
+        ->startFrom('2023-12-31 23:59:59')
+        ->delayForMinutes(10)
+        ->update(['name' => 'Stefan']);
+})->throws(InvalidPostponeParametersException::class);
+
+it('will fail if there is combination of revert at and keep for', function () {
+    $this->model->postponer()
+        ->revertAt('2023-12-31 23:59:59')
+        ->keepForMinutes(10)
+        ->update(['name' => 'Stefan']);
+})->throws(InvalidPostponeParametersException::class);
