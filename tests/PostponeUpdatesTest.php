@@ -195,6 +195,16 @@ it('will not touch the model if the update is postponed', function () {
     expect($this->model->fresh()->updated_at->toDateTimeString())->toBe('2023-01-01 00:00:00');
 });
 
+it('will touch the model if the update is not postponed', function () {
+    testTime()->freeze('2023-01-01 03:00:00');
+
+    $this->model->postponer()
+        ->keepForMinutes(3)
+        ->update(['name' => 'Stefan']);
+
+    expect($this->model->fresh()->updated_at->toDateTimeString())->toBe('2023-01-01 03:00:00');
+});
+
 it('will not change behavior of update without postpone', function () {
     $this->model->update(['name' => 'Stefan']);
 

@@ -23,6 +23,7 @@ trait HasPostponedUpdates
 
             if ($startAt) {
                 $model->discardChanges();
+                $model->timestamps = false;
             } else {
                 $attributesToPostpone = array_intersect_key($model->getOriginal(), $attributesToPostpone);
             }
@@ -37,11 +38,6 @@ trait HasPostponedUpdates
                 'start_at' => $startAt,
                 'revert_at' => $revertAt,
             ]);
-
-            $model->postponer = null;
-
-            // To avoid touch of updated_at value
-            $model->timestamps = false;
         });
 
         static::deleted(function (Model $model) {
