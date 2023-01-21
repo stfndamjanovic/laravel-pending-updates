@@ -12,27 +12,27 @@ This is where your description should go. Limit it to a paragraph or two. Consid
 You can install the package via composer:
 
 ```bash
-composer require stfn/laravel-update-postponer
+composer require stfn/laravel-pending-updates
 ```
 
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-update-postponer-migrations"
+php artisan vendor:publish --tag="laravel-pending-updates-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-update-postponer-config"
+php artisan vendor:publish --tag="laravel-pending-updates-config"
 ```
 
 This is the contents of the published config file:
 
 ```php
 return [
-    'model' => \Stfn\PostponeUpdates\Models\PostponedUpdate::class,
+    'model' => \Stfn\PendingUpdates\Models\PendingUpdate::class,
 ];
 ```
 
@@ -41,7 +41,7 @@ return [
 ```php
 $news = News::find(5);
 
-$news->postponer()
+$news->pending()
     ->startFrom('2023-01-01 00:00:00')
     ->keepForHours(24)
     ->update(['is_active' => true]);

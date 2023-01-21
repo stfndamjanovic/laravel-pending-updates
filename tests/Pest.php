@@ -1,5 +1,5 @@
 <?php
 
-use Stfn\PostponeUpdates\Tests\TestCase;
+use Stfn\PendingUpdates\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

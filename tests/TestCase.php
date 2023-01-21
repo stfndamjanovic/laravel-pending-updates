@@ -1,12 +1,12 @@
 <?php
 
-namespace Stfn\PostponeUpdates\Tests;
+namespace Stfn\PendingUpdates\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Stfn\PostponeUpdates\PostponeUpdateServiceProvider;
+use Stfn\PendingUpdates\PendingUpdateServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -15,14 +15,14 @@ class TestCase extends Orchestra
         parent::setUp();
 
         Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Stfn\\PostponeUpdates\\Tests\\Support\\Database\\Factories\\'.class_basename($modelName).'Factory'
+            fn (string $modelName) => 'Stfn\\PendingUpdates\\Tests\\Support\\Database\\Factories\\'.class_basename($modelName).'Factory'
         );
     }
 
     protected function getPackageProviders($app)
     {
         return [
-            PostponeUpdateServiceProvider::class,
+            PendingUpdateServiceProvider::class,
         ];
     }
 
@@ -30,7 +30,7 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
 
-        $migration = include __DIR__.'/../database/migrations/create_postponed_updates_table.php';
+        $migration = include __DIR__.'/../database/migrations/create_pending_updates_table.php';
         $migration->up();
 
         Schema::create('test_models', function (Blueprint $table) {

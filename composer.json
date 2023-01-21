@@ -1,12 +1,12 @@
 {
-    "name": "stfn/laravel-update-postponer",
+    "name": "stfn/laravel-pending-updates",
     "description": "",
     "keywords": [
         "stfndamjanovic",
         "laravel",
-        "laravel-update-postpone"
+        "laravel-pending-updates"
     ],
-    "homepage": "https://github.com/stfndamjanovic/laravel-update-postponer",
+    "homepage": "https://github.com/stfndamjanovic/laravel-pending-updates",
     "license": "MIT",
     "authors": [
         {
@@ -35,12 +35,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Stfn\\PostponeUpdates\\": "src"
+            "Stfn\\PendingUpdates\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Stfn\\PostponeUpdates\\Tests\\": "tests"
+            "Stfn\\PendingUpdates\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -60,7 +60,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Stfn\\PostponeUpdates\\PostponeUpdateServiceProvider"
+              "Stfn\\PendingUpdates\\PendingUpdateServiceProvider"
             ]
         }
     },

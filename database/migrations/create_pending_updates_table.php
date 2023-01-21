@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('postponed_updates', function (Blueprint $table) {
+        Schema::create('pending_updates', function (Blueprint $table) {
             $table->id();
             $table->morphs('parent');
             $table->json('values');

@@ -1,11 +1,11 @@
 <?php
 
-namespace Stfn\PostponeUpdates\Models;
+namespace Stfn\PendingUpdates\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-class PostponedUpdate extends Model
+class PendingUpdate extends Model
 {
     public $guarded = [];
 
@@ -13,7 +13,7 @@ class PostponedUpdate extends Model
         'values' => 'array',
     ];
 
-    public $table = 'postponed_updates';
+    public $table = 'pending_updates';
 
     public function parent()
     {
@@ -61,7 +61,7 @@ class PostponedUpdate extends Model
 
     public function revertParentModel()
     {
-        return $this->parent->forceFill($this->values)->save();
+        return $this->parent->forceFill($this->values)->saveQuietly();
     }
 
     public function shouldRevert()

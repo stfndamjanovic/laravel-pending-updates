@@ -1,18 +1,18 @@
 <?php
 
-namespace Stfn\PostponeUpdates\Commands;
+namespace Stfn\PendingUpdates\Commands;
 
 use Illuminate\Console\Command;
 
-class CheckPostponedUpdates extends Command
+class CheckPendingUpdates extends Command
 {
-    public $signature = 'postponed-updates:check';
+    public $signature = 'pending-updates:check';
 
-    public $description = 'This command will find and perform updates on all scheduled delay updates';
+    public $description = 'Check pending updates and revert to the original tables';
 
     public function handle(): int
     {
-        $model = config('postpone-updates.model');
+        $model = config('pending-updates.model');
 
         $model::where('is_confirmed', false)
             ->where('created_at', '<=', now()->subMinutes(5))

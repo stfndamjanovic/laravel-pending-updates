@@ -1,9 +1,9 @@
 <?php
 
-namespace Stfn\PostponeUpdates\Tests\Support\Database\Factories;
+namespace Stfn\PendingUpdates\Tests\Support\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Stfn\PostponeUpdates\Tests\Support\Models\TestModel;
+use Stfn\PendingUpdates\Tests\Support\Models\TestModel;
 
 class TestModelFactory extends Factory
 {

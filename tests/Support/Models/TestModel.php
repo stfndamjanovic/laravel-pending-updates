@@ -1,14 +1,14 @@
 <?php
 
-namespace Stfn\PostponeUpdates\Tests\Support\Models;
+namespace Stfn\PendingUpdates\Tests\Support\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Stfn\PostponeUpdates\Models\Concerns\HasPostponedUpdates;
+use Stfn\PendingUpdates\Models\Concerns\HasPendingUpdates;
 
 class TestModel extends Model
 {
-    use HasPostponedUpdates, HasFactory;
+    use HasPendingUpdates, HasFactory;
 
     public $hidden = [
         'password',
