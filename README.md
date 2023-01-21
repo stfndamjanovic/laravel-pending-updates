@@ -77,22 +77,22 @@ With this in place, you will be able to postpone update of this model.
 
 ### Using keep for
 
-You can also update model right now, but keep it updated for a limited number of minutes, hours or days.
+By using keep for, update will be performed at the moment, but package will revert changes after specific number of minutes, hours or days.
 
 ```php
 $ticket = Ticket::find(1); // an Eloquent model
 
-// Update model price to 200 and keep it updated for 60 minutes.
+// Update ticket price to 200 and keep it updated for 60 minutes.
 $ticket->pending()
     ->keepForMinutes(60)
     ->update(['price' => 200]);
     
-// Update model price to 200 and keep it updated for 12 hours.
+// Update ticket price to 200 and keep it updated for 12 hours.
 $ticket->pending()
     ->keepForHours(12)
     ->update(['price' => 200]);
 
-// Update model price to 200 and keep it updated for 3 days.
+// Update ticket price to 200 and keep it updated for 3 days.
 $ticket->pending()
     ->keepForDays(3)
     ->update(['price' => 200]);
@@ -105,17 +105,17 @@ You can use delay for in a minutes, hours or days.
 ```php
 $ticket = Ticket::find(1); // an Eloquent model
 
-// Update model price to 200 after 60 minutes from now and keep it like that for unlimited time.
+// Update ticket price to 200 after 60 minutes from now and keep it like that for unlimited time.
 $ticket->pending()
     ->dalayForMinutes(60)
     ->update(['price' => 200]);
 
-// Update model price to 200 after 12 hours from now and keep it like that for unlimited time.
+// Update ticket price to 200 after 12 hours from now and keep it like that for unlimited time.
 $ticket->pending()
     ->dalayForHours(12)
     ->update(['price' => 200]);
 
-// Update model price to 200 after 3 days from now and keep it like that for unlimited time.
+// Update ticket price to 200 after 3 days from now and keep it like that for unlimited time.
 $ticket->pending()
     ->dalayForDays(3)
     ->update(['price' => 200]);
@@ -128,17 +128,17 @@ You can also use timestamps.
 ```php
 $ticket = Ticket::find(1); // an Eloquent model
 
-// Update model price to 200 at 1st January and keep it updated for unlimited time.
+// Update ticket price to 200 at 1st January and keep it updated for unlimited time.
 $ticket->pending()
     ->startFrom("2023-01-01 00:00:00")
     ->update(['price' => 200]);
 
-// Update model price to 200 at the moment and revert to previous value at 4th January.
+// Update ticket price to 200 at the moment and revert to previous value at 4th January.
 $ticket->pending()
     ->revertAt("2023-04-01 00:00:00")
     ->update(['price' => 200]);
 
-// Update model price to 200 at 1st January and revert to previous value at 4th January.
+// Update ticket price to 200 at 1st January and revert to previous value at 4th January.
 $ticket->pending()
     ->startFrom("2023-01-01 00:00:00")
     ->revertAt("2023-04-01 00:00:00")
