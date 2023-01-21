@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->morphs('parent');
             $table->json('values');
-            $table->boolean('is_confirmed')->default(false);
             $table->timestamp('start_at')->nullable();
             $table->timestamp('revert_at')->nullable();
             $table->timestamps();

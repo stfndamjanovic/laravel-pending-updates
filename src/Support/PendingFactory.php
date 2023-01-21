@@ -4,13 +4,10 @@ namespace Stfn\PendingUpdates\Support;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Traits\ForwardsCalls;
 use Stfn\PendingUpdates\Exceptions\InvalidPendingParametersException;
 
-class PendingBuilder
+class PendingFactory
 {
-    use ForwardsCalls;
-
     const DATE_FORMAT = 'Y-m-d H:i:s';
 
     protected $model;
@@ -140,7 +137,7 @@ class PendingBuilder
         return $days * 60 * 60 * 24;
     }
 
-    public function get()
+    protected function getTimeStamps()
     {
         if ($this->startAt && $this->delayFor) {
             throw InvalidPendingParametersException::create();
@@ -176,12 +173,26 @@ class PendingBuilder
         return [$startAt, $revertAt];
     }
 
-    public function __call($method, $parameters)
+    public function update(array $attributes = [], array $options = [])
     {
-        if ($method != 'update') {
-            static::throwBadMethodCallException($method);
+        [$startAt, $revertAt] = $this->getTimeStamps();
+
+        $pendingAttributes = $attributes;
+
+        if (! $startAt) {
+            $pendingAttributes = array_intersect_key($this->model->getOriginal(), $attributes);
+            $this->model->update($attributes, $options);
         }
 
-        return $this->forwardCallTo($this->model, $method, $parameters);
+        // If pending update already exists, remove that one and create another one
+        if ($this->model->hasPendingUpdate()) {
+            $this->model->pendingUpdate()->delete();
+        }
+
+        $this->model->pendingUpdate()->create([
+            'values' => $pendingAttributes,
+            'start_at' => $startAt,
+            'revert_at' => $revertAt,
+        ]);
     }
 }

@@ -28,7 +28,11 @@ class PendingUpdate extends Model
             return;
         }
 
-        $this->revertParentModel();
+        try {
+            $this->revertParentModel();
+        } catch (\Exception $exception) {
+            report($exception);
+        }
 
         $this->delete();
     }
@@ -43,7 +47,13 @@ class PendingUpdate extends Model
 
         $parentAttributes = array_intersect_key($this->getParentAttributes(), $this->values);
 
-        $this->revertParentModel();
+        try {
+            $this->revertParentModel();
+        } catch (\Exception $exception) {
+            report($exception);
+            $this->delete();
+            return;
+        }
 
         if (! $this->revert_at) {
             $this->delete();

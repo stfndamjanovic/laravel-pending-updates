@@ -16,12 +16,6 @@ beforeEach(function () {
     $this->model = TestModel::factory()->create($this->attributes);
 });
 
-it('will throw an exception if postponer is called on any method other than update', function () {
-    $this->model->pending()
-        ->delayForHours(10)
-        ->delete();
-})->throws(BadMethodCallException::class);
-
 it('will fail if postpone parameters are not set', function () {
     $this->model->pending()
         ->update(['name' => 'Stefan']);

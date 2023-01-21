@@ -14,14 +14,8 @@ class CheckPendingUpdates extends Command
     {
         $model = config('pending-updates.model');
 
-        $model::where('is_confirmed', false)
-            ->where('created_at', '<=', now()->subMinutes(5))
-            ->delete();
-
-        $model::where(function ($query) {
-            $query->where('start_at', '<=', now())
-                ->orWhere('revert_at', '<=', now());
-        })->where('is_confirmed', true)
+        $model::where('start_at', '<=', now())
+            ->orWhere('revert_at', '<=', now())
             ->get()
             ->each(function ($action) {
                 if ($action->shouldRevert()) {

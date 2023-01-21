@@ -5,6 +5,8 @@ use Illuminate\Database\QueryException;
 use function Spatie\PestPluginTestTime\testTime;
 use Stfn\PendingUpdates\Models\PendingUpdate;
 use Stfn\PendingUpdates\Tests\Support\Models\TestModel;
+use function Pest\Laravel\artisan;
+use Stfn\PendingUpdates\Commands\CheckPendingUpdates;
 
 beforeEach(function () {
     testTime()->freeze('2023-01-01 00:00:00');
@@ -280,7 +282,7 @@ it('will not save anything to postponed_updates if model update fail', function 
         $this->model->pending()
             ->keepForMinutes(10)
             ->update(['name' => null]);
-    } catch (QueryException) {
+    } catch (QueryException $exception) {
     }
 
     expect($this->model->fresh())->name->toBe('John Doe');
@@ -290,10 +292,17 @@ it('will not save anything to postponed_updates if model update fail', function 
         $this->model->pending()
             ->delayForMinutes(10)
             ->update(['name' => null]);
-    } catch (QueryException) {
+    } catch (QueryException $exception) {
     }
 
     expect($this->model->fresh())->name->toBe('John Doe');
     expect(PendingUpdate::count())->toBe(1);
-    expect(PendingUpdate::first())->is_confirmed->toBe(0);
+
+    testTime()->addHour();
+
+    artisan(CheckPendingUpdates::class)->assertSuccessful();
+
+    // Name is not reverted because name cannot be null
+    expect($this->model->fresh())->name->toBe('John Doe');
+    expect(PendingUpdate::count())->toBe(0);
 });
