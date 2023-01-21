@@ -75,6 +75,8 @@ class Ticket extends Model
 
 With this in place, you will be able to postpone update of this model.
 
+### Using keep for
+
 You can also update model right now, but keep it updated for a limited number of minutes, hours or days.
 
 ```php
@@ -96,7 +98,9 @@ $ticket->pending()
     ->update(['price' => 200]);
 ```
 
-Or you can use delay in a minutes, hours or days.
+### Using delay for
+
+You can use delay for in a minutes, hours or days.
 
 ```php
 $ticket = Ticket::find(1); // an Eloquent model
@@ -116,6 +120,8 @@ $ticket->pending()
     ->dalayForDays(3)
     ->update(['price' => 200]);
 ```
+
+### Using timestamps
 
 You can also use timestamps.
 
@@ -138,6 +144,8 @@ $ticket->pending()
     ->revertAt("2023-04-01 00:00:00")
     ->update(['price' => 200]);
 ```
+
+### Using combination
 
 Combination of specific minutes, hours or days with timestamps are also possible.
 
