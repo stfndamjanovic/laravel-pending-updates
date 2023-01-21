@@ -15,7 +15,7 @@ class TestPendingModelFactory extends Factory
         return [
             'parent_id' => TestModel::factory(),
             'parent_type' => 'TestModel',
-            'values' => []
+            'values' => [],
         ];
     }
 }

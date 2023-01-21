@@ -2,11 +2,11 @@
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\QueryException;
+use function Pest\Laravel\artisan;
 use function Spatie\PestPluginTestTime\testTime;
+use Stfn\PendingUpdates\Commands\CheckPendingUpdates;
 use Stfn\PendingUpdates\Models\PendingUpdate;
 use Stfn\PendingUpdates\Tests\Support\Models\TestModel;
-use function Pest\Laravel\artisan;
-use Stfn\PendingUpdates\Commands\CheckPendingUpdates;
 
 beforeEach(function () {
     testTime()->freeze('2023-01-01 00:00:00');

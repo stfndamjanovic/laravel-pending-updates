@@ -126,39 +126,39 @@ $ticket->pending()
 You can also use timestamps to specify exact time when you want to update some model.
 
 ```php
-$ticket = Ticket::find(1);
+$product = Product::find(1);
 
-// Update ticket price to 200 at 1st January and keep it updated for unlimited time.
-$ticket->pending()
+// Update product to be unavailable from 1st January.
+$product->pending()
     ->startFrom("2023-01-01 00:00:00")
-    ->update(['price' => 200]);
+    ->update(['is_available' => false]);
 
-// Update ticket price to 200 at the moment and revert to previous value at 4th January.
-$ticket->pending()
+// Update product to be unavailable until 4th January.
+$product->pending()
     ->revertAt("2023-04-01 00:00:00")
-    ->update(['price' => 200]);
+    ->update(['is_available' => false]);
 
-// Update ticket price to 200 at 1st January and revert to previous value at 4th January.
-$ticket->pending()
+// Update product to be unavailable from 1st January to 4th January.
+$product->pending()
     ->startFrom("2023-01-01 00:00:00")
     ->revertAt("2023-04-01 00:00:00")
-    ->update(['price' => 200]);
+    ->update(['is_available' => false]);
 ```
 
 ### Using combination
 
 A combination of specific minutes, hours, or days with timestamps is also possible.
 ```php
-$ticket = Ticket::find(1);
+$product = Product::find(1);
 
-// Update ticket price to 200 from 1st January and keep it updated for 1 day.
-$ticket->pending()
+// Update product to be unavailable from 1st January and keep that state for 1 day.
+$product->pending()
     ->startFrom("2023-01-01 00:00:00")
     ->keepForDays(1)
-    ->update(['price' => 200]);
+    ->update(['is_available' => false]);
 
-// Update ticket price to 200 after 60 minutes from now and keep it updated until 4th January.
-$ticket->pending()
+// Update product to became unavailable after 60 minutes from now and keep that state until 4th January.
+$product->pending()
     ->delayForMinutes(60)
     ->revertAt("2023-04-01 00:00:00")
     ->update(['price' => 200]);

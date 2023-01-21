@@ -52,6 +52,7 @@ class PendingUpdate extends Model
         } catch (\Exception $exception) {
             report($exception);
             $this->delete();
+
             return;
         }
 
