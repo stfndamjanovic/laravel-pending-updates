@@ -101,6 +101,10 @@ class Postponer
             throw InvalidPostponeParametersException::create();
         }
 
+        if ($seconds <= 0) {
+            throw InvalidPostponeParametersException::create();
+        }
+
         $this->delayFor = $seconds;
 
         return $this;
@@ -109,6 +113,10 @@ class Postponer
     protected function setKeepForProperty(int $seconds)
     {
         if ($this->keepFor) {
+            throw InvalidPostponeParametersException::create();
+        }
+
+        if ($seconds <= 0) {
             throw InvalidPostponeParametersException::create();
         }
 

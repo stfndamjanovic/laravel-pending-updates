@@ -14,8 +14,14 @@ class CheckPostponedUpdates extends Command
     {
         $model = config('postpone-updates.model');
 
-        $model::where('start_at', '<=', now())
-            ->orWhere('revert_at', '<=', now())
+        $model::where('is_confirmed', false)
+            ->where('created_at', '<=', now()->subMinutes(5))
+            ->delete();
+
+        $model::where(function ($query) {
+            $query->where('start_at', '<=', now())
+                ->orWhere('revert_at', '<=', now());
+        })->where('is_confirmed', true)
             ->get()
             ->each(function ($action) {
                 if ($action->shouldRevert()) {

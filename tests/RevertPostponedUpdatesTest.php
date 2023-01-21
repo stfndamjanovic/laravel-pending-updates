@@ -77,3 +77,18 @@ it('can start to apply delayed changes and revert that after some time', functio
     expect($this->model->fresh())->name->toBe('John Doe');
     expect(PostponedUpdate::count())->toBe(0);
 });
+
+it('will remove postpone update if model is deleted in the meantime', function () {
+    TestPostponedModel::factory()->create([
+        'start_at' => '2022-12-31 23:59:59',
+        'revert_at' => '2023-01-01 02:59:59',
+        'parent_id' => $this->model->id,
+        'values' => ['name' => 'John Doe Delayed'],
+    ]);
+
+    $this->model->deleteQuietly();
+
+    artisan(CheckPostponedUpdates::class)->assertSuccessful();
+
+    expect(PostponedUpdate::count())->toBe(0);
+});

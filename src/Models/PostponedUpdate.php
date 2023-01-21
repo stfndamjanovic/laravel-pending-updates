@@ -22,6 +22,12 @@ class PostponedUpdate extends Model
 
     public function revert()
     {
+        if (! $this->parent) {
+            $this->delete();
+
+            return;
+        }
+
         $this->revertParentModel();
 
         $this->delete();
@@ -29,6 +35,12 @@ class PostponedUpdate extends Model
 
     public function apply()
     {
+        if (! $this->parent) {
+            $this->delete();
+
+            return;
+        }
+
         $parentAttributes = array_intersect_key($this->getParentAttributes(), $this->values);
 
         $this->revertParentModel();

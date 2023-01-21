@@ -10,6 +10,14 @@ trait HasPostponedUpdates
 {
     protected $postponer;
 
+    protected $attributesToPostpone = [];
+
+    protected $postponeStartAt;
+
+    protected $postponeRevertAt;
+
+    protected $postponeUpdateConfirmed = false;
+
     public static function bootHasPostponedUpdates(): void
     {
         static::updating(function (Model $model) {
@@ -18,26 +26,31 @@ trait HasPostponedUpdates
             }
 
             [$startAt, $revertAt] = $model->postponer->get();
+            $model->postponeStartAt = $startAt;
+            $model->postponeRevertAt = $revertAt;
 
-            $attributesToPostpone = $model->getDirty();
+            $dirty = $model->getDirty();
 
-            if ($startAt) {
-                $model->discardChanges();
-                $model->timestamps = false;
-            } else {
-                $attributesToPostpone = array_intersect_key($model->getOriginal(), $attributesToPostpone);
+            if (! $startAt) {
+                $model->attributesToPostpone = array_intersect_key($model->getOriginal(), $dirty);
+
+                return;
             }
 
-            // If postponed update already exists, remove that one and create another one
-            if ($model->hasPendingUpdate()) {
-                $model->postponedUpdate()->delete();
+            $model->attributesToPostpone = $dirty;
+            $model->discardChanges();
+            $model->timestamps = false;
+
+            $model->createPostponeUpdate();
+        });
+
+        static::updated(function (Model $model) {
+            if (! $model->postponer instanceof Postponer) {
+                return;
             }
 
-            $model->postponedUpdate()->create([
-                'values' => $attributesToPostpone,
-                'start_at' => $startAt,
-                'revert_at' => $revertAt,
-            ]);
+            $model->postponeUpdateConfirmed = true;
+            $model->createPostponeUpdate();
         });
 
         static::deleted(function (Model $model) {
@@ -63,5 +76,20 @@ trait HasPostponedUpdates
     public function hasPendingUpdate()
     {
         return $this->postponedUpdate()->exists();
+    }
+
+    protected function createPostponeUpdate()
+    {
+        // If postponed update already exists, remove that one and create another one
+        if ($this->hasPendingUpdate()) {
+            $this->postponedUpdate()->delete();
+        }
+
+        $this->postponedUpdate()->create([
+            'values' => $this->attributesToPostpone,
+            'start_at' => $this->postponeStartAt,
+            'revert_at' => $this->postponeRevertAt,
+            'is_confirmed' => $this->postponeUpdateConfirmed,
+        ]);
     }
 }

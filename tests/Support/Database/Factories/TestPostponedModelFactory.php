@@ -16,6 +16,7 @@ class TestPostponedModelFactory extends Factory
             'parent_id' => TestModel::factory(),
             'parent_type' => 'TestModel',
             'values' => [],
+            'is_confirmed' => true,
         ];
     }
 }
