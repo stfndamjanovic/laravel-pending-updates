@@ -8,7 +8,7 @@
 When updating an Eloquent model, by using this package, you can postpone updating process for some time.
 
 ```php
-$news = News::find(1); // an Eloquent model
+$news = News::find(1);
 
 $news->pending()
     ->startFrom('2023-01-01 00:00:00')
@@ -80,7 +80,7 @@ With this in place, you will be able to postpone update of this model.
 By using keep for, update will be performed at the moment, but package will revert changes after specific number of minutes, hours or days.
 
 ```php
-$ticket = Ticket::find(1); // an Eloquent model
+$ticket = Ticket::find(1);
 
 // Update ticket price to 200 and keep it updated for 60 minutes.
 $ticket->pending()
@@ -103,7 +103,7 @@ $ticket->pending()
 By using delay for, update will be performed later, after specific number of minutes, hours or days.
 
 ```php
-$ticket = Ticket::find(1); // an Eloquent model
+$ticket = Ticket::find(1);
 
 // Update ticket price to 200 after 60 minutes from now and keep it like that for unlimited time.
 $ticket->pending()
@@ -126,7 +126,7 @@ $ticket->pending()
 You can also use timestamps to specify exact time when you want to update some model.
 
 ```php
-$ticket = Ticket::find(1); // an Eloquent model
+$ticket = Ticket::find(1);
 
 // Update ticket price to 200 at 1st January and keep it updated for unlimited time.
 $ticket->pending()
@@ -149,7 +149,7 @@ $ticket->pending()
 
 A combination of specific minutes, hours, or days with timestamps is also possible.
 ```php
-$ticket = Ticket::find(1); // an Eloquent model
+$ticket = Ticket::find(1);
 
 // Update ticket price to 200 from 1st January and keep it updated for 1 day.
 $ticket->pending()
