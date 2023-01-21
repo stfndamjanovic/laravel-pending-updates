@@ -100,7 +100,7 @@ $ticket->pending()
 
 ### Using delay for
 
-You can use delay for in a minutes, hours or days.
+By using delay for, update will be performed later, after specific number of minutes, hours or days.
 
 ```php
 $ticket = Ticket::find(1); // an Eloquent model
@@ -123,7 +123,7 @@ $ticket->pending()
 
 ### Using timestamps
 
-You can also use timestamps.
+You can also use timestamps to specify exact time when you want to update some model.
 
 ```php
 $ticket = Ticket::find(1); // an Eloquent model
@@ -147,8 +147,7 @@ $ticket->pending()
 
 ### Using combination
 
-Combination of specific minutes, hours or days with timestamps are also possible.
-
+A combination of specific minutes, hours, or days with timestamps is also possible.
 ```php
 $ticket = Ticket::find(1); // an Eloquent model
 
