@@ -5,6 +5,12 @@ namespace Stfn\PendingUpdates\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $start_at
+ * @property string $revert_at
+ * @property array $values
+ * @property Model $parent
+ */
 class PendingUpdate extends Model
 {
     public $guarded = [];
@@ -22,7 +28,7 @@ class PendingUpdate extends Model
 
     public function revert()
     {
-        if (! $this->parent) {
+        if (! $this->parent instanceof Model) {
             $this->delete();
 
             return;
@@ -39,7 +45,7 @@ class PendingUpdate extends Model
 
     public function apply()
     {
-        if (! $this->parent) {
+        if (! $this->parent instanceof Model) {
             $this->delete();
 
             return;

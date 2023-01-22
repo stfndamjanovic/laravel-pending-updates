@@ -8,6 +8,6 @@ class InvalidAttributeException extends Exception
 {
     public static function create()
     {
-        return new static('Trying to postpone update of not allowed attribute.');
+        return new self('Trying to postpone update of not allowed attribute.');
     }
 }
