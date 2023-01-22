@@ -139,3 +139,24 @@ it('will remove pending update if it cannot be applied on original table', funct
     expect($this->model->fresh())->name->toBe('John Doe');
     expect(PendingUpdate::count())->toBe(0);
 });
+
+it('can use custom pending update model', function () {
+    $pendingUpdateModel = new class extends PendingUpdate
+    {
+        public function shouldRevert(): bool
+        {
+            return false;
+        }
+    };
+
+    config(['pending-updates.model' => $pendingUpdateModel]);
+
+    TestPendingModel::factory()->create([
+        'revert_at' => '2022-12-31 23:59:59',
+        'parent_id' => $this->model->id,
+        'values' => ['name' => 'Jane Doe']
+    ]);
+
+    expect($this->model->fresh())->name->toBe('John Doe');
+    expect(PendingUpdate::first())->values->toBe(['name' => 'Jane Doe']);
+});
