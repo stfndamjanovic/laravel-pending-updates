@@ -40,4 +40,9 @@ class InvalidPendingParametersException extends Exception
     {
         return new self('Invalid timestamp configuration. You must set at least one parameter.');
     }
+
+    public static function aboveMaximumPostponeDays()
+    {
+        return new self('Revert at is above maximum postpone of ' . config('pending-updates.max_postpone_days') . ' days');
+    }
 }

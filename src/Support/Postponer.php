@@ -171,6 +171,10 @@ class Postponer
             throw InvalidPendingParametersException::invalidTimestampConfiguration();
         }
 
+        if (Carbon::parse($revertAt)->diffInDays(now()) > config('pending-updates.max_postpone_days')) {
+            throw InvalidPendingParametersException::aboveMaximumPostponeDays();
+        }
+
         return [$startAt, $revertAt];
     }
 

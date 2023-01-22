@@ -1,9 +1,9 @@
 # Postpone model updates or temporary keep them updated for some time 
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/stfndamjanovic/laravel-update-postponer.svg?style=flat-square)](https://packagist.org/packages/stfndamjanovic/laravel-temp-actions)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/stfndamjanovic/laravel-update-postponer/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/stfndamjanovic/laravel-temp-actions/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/stfndamjanovic/laravel-update-postponer/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/stfndamjanovic/laravel-temp-actions/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/stfndamjanovic/laravel-update-postponer.svg?style=flat-square)](https://packagist.org/packages/stfndamjanovic/laravel-temp-actions)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/stfndamjanovic/laravel-pending-updates.svg?style=flat-square)](https://packagist.org/packages/stfndamjanovic/laravel-temp-actions)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/stfndamjanovic/laravel-pending-updates/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/stfndamjanovic/laravel-temp-actions/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/stfndamjanovic/laravel-pending-updates/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/stfndamjanovic/laravel-temp-actions/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/stfndamjanovic/laravel-pending-updates.svg?style=flat-square)](https://packagist.org/packages/stfndamjanovic/laravel-temp-actions)
 
 When updating an Eloquent model, by using this package, you can postpone updating process for some time.
 
@@ -43,13 +43,18 @@ This is the contents of the published config file:
 
 ```php
 return [
+    // Maximum postpone in days.
+    'max_postpone_days' => 10,
+
+    // The model uses to store pending updates.
     'model' => \Stfn\PendingUpdates\Models\PendingUpdate::class,
 ];
+
 ```
 When running the console command `pending-updates:check` all pending updates will be checked
 and if there is a need to revert some update to original table, this command will do that for you.
 
-This command need to be scheduled in Laravel's console kernel.
+That command needs to be scheduled in the Laravel console kernel.
 ```php
 // app/Console/Kernel.php
 use Stfn\PendingUpdates\Commands\CheckPendingUpdates;

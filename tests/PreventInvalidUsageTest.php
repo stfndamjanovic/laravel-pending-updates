@@ -107,3 +107,10 @@ it('will fail if custom model is not instance of PendingUpdate', function () {
 it('will fail on update of not allowed attribute', function () {
     $this->model->postpone()->keepForHours(2)->update(['address' => 'New York']);
 })->throws(InvalidAttributeException::class);
+
+it('will fail if revert_at is above maximum postpone days', function () {
+    $this->model->postpone()->keepForDays(31)->update(['name' => 'Jane Doe']);
+})->throws(
+    InvalidPendingParametersException::class,
+    'Revert at is above maximum postpone of 10 days'
+);
