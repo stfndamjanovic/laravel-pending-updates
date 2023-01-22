@@ -7,6 +7,7 @@ use Stfn\PendingUpdates\Commands\CheckPendingUpdates;
 use Stfn\PendingUpdates\Models\PendingUpdate;
 use Stfn\PendingUpdates\Tests\Support\Models\TestModel;
 use Stfn\PendingUpdates\Tests\Support\Models\TestPendingModel;
+use Illuminate\Database\QueryException;
 
 beforeEach(function () {
     testTime()->freeze('2023-01-01 00:00:00');
@@ -93,5 +94,35 @@ it('will remove postpone update if model is deleted in the meantime', function (
 
     artisan(CheckPendingUpdates::class)->assertSuccessful();
 
+    expect(PendingUpdate::count())->toBe(0);
+});
+
+it('will not save anything to postponed_updates if model update fail', function () {
+    try {
+        $this->model->postpone()
+            ->keepForMinutes(10)
+            ->update(['name' => null]);
+    } catch (QueryException $exception) {
+    }
+
+    expect($this->model->fresh())->name->toBe('John Doe');
+    expect(PendingUpdate::count())->toBe(0);
+
+    try {
+        $this->model->postpone()
+            ->delayForMinutes(10)
+            ->update(['name' => null]);
+    } catch (QueryException $exception) {
+    }
+
+    expect($this->model->fresh())->name->toBe('John Doe');
+    expect(PendingUpdate::count())->toBe(1);
+
+    testTime()->addHour();
+
+    artisan(CheckPendingUpdates::class)->assertSuccessful();
+
+    // Name is not reverted because name cannot be null
+    expect($this->model->fresh())->name->toBe('John Doe');
     expect(PendingUpdate::count())->toBe(0);
 });

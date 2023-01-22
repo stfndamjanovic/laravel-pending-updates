@@ -70,9 +70,9 @@ class PendingUpdate extends Model
         return $this->parent->getAttributes();
     }
 
-    public function revertParentModel()
+    protected function revertParentModel()
     {
-        return $this->parent->forceFill($this->values)->saveQuietly();
+        return $this->parent->forceFill($this->values)->save();
     }
 
     public function shouldRevert()

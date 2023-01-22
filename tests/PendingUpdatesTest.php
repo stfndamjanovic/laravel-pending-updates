@@ -1,10 +1,7 @@
 <?php
 
 use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Database\QueryException;
-use function Pest\Laravel\artisan;
 use function Spatie\PestPluginTestTime\testTime;
-use Stfn\PendingUpdates\Commands\CheckPendingUpdates;
 use Stfn\PendingUpdates\Models\PendingUpdate;
 use Stfn\PendingUpdates\Tests\Support\Models\TestModel;
 
@@ -275,36 +272,6 @@ it('can use different date format', function () {
 
     expect(PendingUpdate::first())
         ->start_at->toBe('2023-12-31 00:00:00');
-});
-
-it('will not save anything to postponed_updates if model update fail', function () {
-    try {
-        $this->model->postpone()
-            ->keepForMinutes(10)
-            ->update(['name' => null]);
-    } catch (QueryException $exception) {
-    }
-
-    expect($this->model->fresh())->name->toBe('John Doe');
-    expect(PendingUpdate::count())->toBe(0);
-
-    try {
-        $this->model->postpone()
-            ->delayForMinutes(10)
-            ->update(['name' => null]);
-    } catch (QueryException $exception) {
-    }
-
-    expect($this->model->fresh())->name->toBe('John Doe');
-    expect(PendingUpdate::count())->toBe(1);
-
-    testTime()->addHour();
-
-    artisan(CheckPendingUpdates::class)->assertSuccessful();
-
-    // Name is not reverted because name cannot be null
-    expect($this->model->fresh())->name->toBe('John Doe');
-    expect(PendingUpdate::count())->toBe(0);
 });
 
 it('will not save guarded attributes', function () {

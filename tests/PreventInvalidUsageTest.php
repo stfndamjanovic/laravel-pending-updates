@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use function Spatie\PestPluginTestTime\testTime;
 use Stfn\PendingUpdates\Exceptions\InvalidPendingParametersException;
 use Stfn\PendingUpdates\Tests\Support\Models\TestModel;
+use Stfn\PendingUpdates\Exceptions\InvalidPendingUpdateModel;
+use Stfn\PendingUpdates\PendingUpdateServiceProvider;
 
 beforeEach(function () {
     testTime()->freeze('2023-01-01 00:00:00');
@@ -93,3 +95,10 @@ it('will fail if keep for minutes is below 1', function () {
         ->keepForMinutes(-1)
         ->update(['name' => 'Stefan']);
 })->throws(InvalidPendingParametersException::class);
+
+it('will fail if custom model is not instance of PendingUpdate', function () {
+    config(['pending-updates.model' => TestModel::class]);
+
+    $provider = app()->getProvider(PendingUpdateServiceProvider::class);
+    $provider->boot();
+})->throws(InvalidPendingUpdateModel::class);
