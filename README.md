@@ -164,6 +164,26 @@ $product->postpone()
     ->update(['price' => 200]);
 ```
 
+### Using methods on the model
+
+By default, all fillable attributes are allowed to be postponed, but you can change that by overriding
+`allowedPendingAttributes` method.
+
+```php
+use Illuminate\Database\Eloquent\Model;
+use Stfn\PendingUpdates\Models\Concerns\HasPendingUpdates;
+
+class Ticket extends Model
+{
+    use HasPendingUpdates;
+    
+    public function allowedPendingAttributes()
+    {
+        return ['price'];
+    }
+}
+```
+
 ## Testing
 
 ```bash

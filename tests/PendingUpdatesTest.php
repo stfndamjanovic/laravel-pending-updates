@@ -278,15 +278,6 @@ it('can use different date format', function () {
         ->start_at->toBe('2023-12-31 00:00:00');
 });
 
-it('will not save guarded attributes', function () {
-    $this->model->postpone()
-        ->keepForMinutes(3)
-        ->update(['secret' => 'new-value']);
-
-    expect(TestModel::first())->secret->toBe('hash');
-    expect(PendingUpdate::count())->toBe(0);
-});
-
 it('will not save anything if attributes are not changed', function () {
     $this->model->postpone()
         ->keepForMinutes(3)

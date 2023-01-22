@@ -34,4 +34,9 @@ trait HasPendingUpdates
     {
         return $this->pendingUpdate()->exists();
     }
+
+    public function allowedPendingAttributes()
+    {
+        return $this->getFillable();
+    }
 }

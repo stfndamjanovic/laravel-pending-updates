@@ -3,6 +3,7 @@
 use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use function Spatie\PestPluginTestTime\testTime;
+use Stfn\PendingUpdates\Exceptions\InvalidAttributeException;
 use Stfn\PendingUpdates\Exceptions\InvalidPendingParametersException;
 use Stfn\PendingUpdates\Exceptions\InvalidPendingUpdateModel;
 use Stfn\PendingUpdates\PendingUpdateServiceProvider;
@@ -102,3 +103,7 @@ it('will fail if custom model is not instance of PendingUpdate', function () {
     $provider = app()->getProvider(PendingUpdateServiceProvider::class);
     $provider->boot();
 })->throws(InvalidPendingUpdateModel::class);
+
+it('will fail on update of not allowed attribute', function () {
+    $this->model->postpone()->keepForHours(2)->update(['address' => 'New York']);
+})->throws(InvalidAttributeException::class);

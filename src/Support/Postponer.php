@@ -4,6 +4,7 @@ namespace Stfn\PendingUpdates\Support;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Stfn\PendingUpdates\Exceptions\InvalidAttributeException;
 use Stfn\PendingUpdates\Exceptions\InvalidPendingParametersException;
 
 class Postponer
@@ -175,9 +176,18 @@ class Postponer
 
     public function update(array $attributes = [], array $options = [])
     {
+        $disallowedAttributes = array_diff(
+            array_keys($attributes),
+            $this->model->allowedPendingAttributes()
+        );
+
+        if (! empty($disallowedAttributes)) {
+            throw InvalidAttributeException::create();
+        }
+
         [$startAt, $revertAt] = $this->get();
 
-        $this->model->fill($attributes);
+        $this->model->forceFill($attributes);
 
         $pendingAttributes = $this->model->getDirty();
 
