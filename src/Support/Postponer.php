@@ -62,7 +62,7 @@ class Postponer
         $this->validateTimestamp($date);
 
         if ($this->startAt) {
-            throw InvalidPendingParametersException::create();
+            throw InvalidPendingParametersException::twicePropertySet();
         }
 
         $this->startAt = $date->format(self::DATE_FORMAT);
@@ -77,7 +77,7 @@ class Postponer
         $this->validateTimestamp($date);
 
         if ($this->revertAt) {
-            throw InvalidPendingParametersException::create();
+            throw InvalidPendingParametersException::twicePropertySet();
         }
 
         $this->revertAt = $date->format(self::DATE_FORMAT);
@@ -88,18 +88,18 @@ class Postponer
     protected function validateTimestamp(Carbon $timestamp)
     {
         if ($timestamp->isPast()) {
-            throw InvalidPendingParametersException::create();
+            throw InvalidPendingParametersException::pastTimestamp();
         }
     }
 
     protected function setDelayForProperty(int $seconds)
     {
         if ($this->delayFor) {
-            throw InvalidPendingParametersException::create();
+            throw InvalidPendingParametersException::twicePropertySet();
         }
 
         if ($seconds <= 0) {
-            throw InvalidPendingParametersException::create();
+            throw InvalidPendingParametersException::negativeTimeConfiguration();
         }
 
         $this->delayFor = $seconds;
@@ -110,11 +110,11 @@ class Postponer
     protected function setKeepForProperty(int $seconds)
     {
         if ($this->keepFor) {
-            throw InvalidPendingParametersException::create();
+            throw InvalidPendingParametersException::twicePropertySet();
         }
 
         if ($seconds <= 0) {
-            throw InvalidPendingParametersException::create();
+            throw InvalidPendingParametersException::negativeTimeConfiguration();
         }
 
         $this->keepFor = $seconds;
@@ -140,11 +140,11 @@ class Postponer
     protected function getTimeStamps()
     {
         if ($this->startAt && $this->delayFor) {
-            throw InvalidPendingParametersException::create();
+            throw InvalidPendingParametersException::invalidStartAtConfiguration();
         }
 
         if ($this->revertAt && $this->keepFor) {
-            throw InvalidPendingParametersException::create();
+            throw InvalidPendingParametersException::invalidRevertAtConfiguration();
         }
 
         $startAt = $this->startAt;
@@ -163,11 +163,11 @@ class Postponer
         }
 
         if (($startAt && $revertAt) && $startAt >= $revertAt) {
-            throw InvalidPendingParametersException::create();
+            throw InvalidPendingParametersException::invalidCombinationOfStartAndRevertAt();
         }
 
         if (! $startAt && ! $revertAt) {
-            throw InvalidPendingParametersException::create();
+            throw InvalidPendingParametersException::invalidTimestampConfiguration();
         }
 
         return [$startAt, $revertAt];
