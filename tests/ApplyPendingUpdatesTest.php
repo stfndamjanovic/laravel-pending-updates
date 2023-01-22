@@ -126,3 +126,16 @@ it('will not save anything to postponed_updates if model update fail', function 
     expect($this->model->fresh())->name->toBe('John Doe');
     expect(PendingUpdate::count())->toBe(0);
 });
+
+it('will remove pending update if it cannot be applied on original table', function () {
+    TestPendingModel::factory()->create([
+        'revert_at' => '2022-12-31 23:59:59',
+        'parent_id' => $this->model->id,
+        'values' => ['unknown_field' => null]
+    ]);
+
+    artisan(CheckPendingUpdates::class)->assertSuccessful();
+
+    expect($this->model->fresh())->name->toBe('John Doe');
+    expect(PendingUpdate::count())->toBe(0);
+});
