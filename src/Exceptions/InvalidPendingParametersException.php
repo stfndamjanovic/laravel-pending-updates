@@ -43,6 +43,6 @@ class InvalidPendingParametersException extends Exception
 
     public static function aboveMaximumPostponeDays()
     {
-        return new self('Revert at is above maximum postpone of ' . config('pending-updates.max_postpone_days') . ' days');
+        return new self('Revert at is above maximum postpone of '.config('pending-updates.max_postpone_days').' days');
     }
 }

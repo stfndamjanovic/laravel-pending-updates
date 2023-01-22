@@ -70,11 +70,11 @@ You should add the HasPendingUpdates trait to all models which need to have a pe
 
 ```php
 use Illuminate\Database\Eloquent\Model;
-use Stfn\PendingUpdates\Models\Concerns\HasPendingUpdates;
+use Stfn\PendingUpdates\Models\Concerns\HasPendingUpdate;
 
 class Ticket extends Model
 {
-    use HasPendingUpdates;
+    use HasPendingUpdate;
 }
 ```
 
@@ -176,11 +176,11 @@ By default, all fillable attributes are allowed to be postponed, but you can cha
 
 ```php
 use Illuminate\Database\Eloquent\Model;
-use Stfn\PendingUpdates\Models\Concerns\HasPendingUpdates;
+use Stfn\PendingUpdates\Models\Concerns\HasPendingUpdate;
 
 class Ticket extends Model
 {
-    use HasPendingUpdates;
+    use HasPendingUpdate;
     
     public function allowedPendingAttributes()
     {
