@@ -4,9 +4,9 @@ use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use function Spatie\PestPluginTestTime\testTime;
 use Stfn\PendingUpdates\Exceptions\InvalidPendingParametersException;
-use Stfn\PendingUpdates\Tests\Support\Models\TestModel;
 use Stfn\PendingUpdates\Exceptions\InvalidPendingUpdateModel;
 use Stfn\PendingUpdates\PendingUpdateServiceProvider;
+use Stfn\PendingUpdates\Tests\Support\Models\TestModel;
 
 beforeEach(function () {
     testTime()->freeze('2023-01-01 00:00:00');

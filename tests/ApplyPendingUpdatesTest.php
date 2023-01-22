@@ -1,13 +1,13 @@
 <?php
 
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\QueryException;
 use function Pest\Laravel\artisan;
 use function Spatie\PestPluginTestTime\testTime;
 use Stfn\PendingUpdates\Commands\CheckPendingUpdates;
 use Stfn\PendingUpdates\Models\PendingUpdate;
 use Stfn\PendingUpdates\Tests\Support\Models\TestModel;
 use Stfn\PendingUpdates\Tests\Support\Models\TestPendingModel;
-use Illuminate\Database\QueryException;
 
 beforeEach(function () {
     testTime()->freeze('2023-01-01 00:00:00');
@@ -79,7 +79,7 @@ it('can start to apply delayed changes and revert that after some time', functio
     expect(PendingUpdate::count())->toBe(0);
 });
 
-it('will remove postpone update if model is deleted in the meantime', function () {
+it('will remove pending update if the model is deleted in the meantime', function () {
     TestPendingModel::factory()->create([
         'start_at' => '2022-12-31 23:59:59',
         'parent_id' => $this->model->id,
@@ -131,7 +131,7 @@ it('will remove pending update if it cannot be applied on original table', funct
     TestPendingModel::factory()->create([
         'revert_at' => '2022-12-31 23:59:59',
         'parent_id' => $this->model->id,
-        'values' => ['unknown_field' => null]
+        'values' => ['unknown_field' => null],
     ]);
 
     artisan(CheckPendingUpdates::class)->assertSuccessful();
@@ -154,7 +154,7 @@ it('can use custom pending update model', function () {
     TestPendingModel::factory()->create([
         'revert_at' => '2022-12-31 23:59:59',
         'parent_id' => $this->model->id,
-        'values' => ['name' => 'Jane Doe']
+        'values' => ['name' => 'Jane Doe'],
     ]);
 
     expect($this->model->fresh())->name->toBe('John Doe');

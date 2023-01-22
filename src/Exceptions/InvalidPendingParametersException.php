@@ -15,6 +15,7 @@ class InvalidPendingParametersException extends Exception
     {
         return new self('Cannot use below 0 value.');
     }
+
     public static function twicePropertySet()
     {
         return new self('Cannot set postpone property twice.');
@@ -34,6 +35,7 @@ class InvalidPendingParametersException extends Exception
     {
         return new self('Invalid timestamp configuration. Start at cannot be grater than revert at.');
     }
+
     public static function invalidTimestampConfiguration()
     {
         return new self('Invalid timestamp configuration. You must set at least one parameter.');

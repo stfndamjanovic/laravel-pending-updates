@@ -137,7 +137,7 @@ class Postponer
         return $days * 60 * 60 * 24;
     }
 
-    protected function getTimeStamps()
+    protected function get()
     {
         if ($this->startAt && $this->delayFor) {
             throw InvalidPendingParametersException::invalidStartAtConfiguration();
@@ -151,15 +151,15 @@ class Postponer
         $revertAt = $this->revertAt;
 
         if ($this->delayFor) {
-            $startAt = Carbon::now()->addSeconds($this->delayFor);
+            $startAt = Carbon::now()
+                ->addSeconds($this->delayFor)
+                ->format(self::DATE_FORMAT);
         }
 
         if ($this->keepFor) {
-            if ($startAt) {
-                $revertAt = Carbon::parse($startAt)->addSeconds($this->keepFor);
-            } else {
-                $revertAt = Carbon::now()->addSeconds($this->keepFor);
-            }
+            $revertAt = Carbon::parse($startAt)
+                ->addSeconds($this->keepFor)
+                ->format(self::DATE_FORMAT);
         }
 
         if (($startAt && $revertAt) && $startAt >= $revertAt) {
@@ -175,7 +175,7 @@ class Postponer
 
     public function update(array $attributes = [], array $options = [])
     {
-        [$startAt, $revertAt] = $this->getTimeStamps();
+        [$startAt, $revertAt] = $this->get();
 
         $this->model->fill($attributes);
 
@@ -186,7 +186,7 @@ class Postponer
             $this->model->update($attributes, $options);
         }
 
-        if (!$pendingAttributes) {
+        if (! $pendingAttributes) {
             return false;
         }
 

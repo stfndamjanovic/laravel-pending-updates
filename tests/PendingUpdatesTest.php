@@ -216,17 +216,21 @@ it('will touch the model if the update is not postponed', function () {
         ->keepForMinutes(3)
         ->update(['name' => 'Jane Doe']);
 
-    expect($this->model->fresh()->updated_at->toDateTimeString())->toBe('2023-01-01 03:00:00');
+    $model = $this->model->fresh();
+
+    expect($model)
+        ->updated_at->toDateTimeString()->toBe('2023-01-01 03:00:00')
+        ->name->toBe('Jane Doe');
 });
 
-it('will not change behavior of update without postpone', function () {
+it('will not change behavior of update without pending attached to it', function () {
     $this->model->update(['name' => 'Jane Doe']);
 
     expect($this->model->fresh())->name->toBe('Jane Doe');
     expect(PendingUpdate::count())->toBe(0);
 });
 
-it('will delete postponed updates on model delete', function () {
+it('will delete pending updates on model delete', function () {
     $this->model->postpone()
         ->delayForMinutes(10)
         ->update(['name' => 'Jane Doe']);
@@ -238,7 +242,7 @@ it('will delete postponed updates on model delete', function () {
     expect(PendingUpdate::count())->toBe(0);
 });
 
-it('will override previous postponed update with the new one', function () {
+it('will override previous pending update with the new one', function () {
     $this->model->postpone()
         ->keepForHours(3)
         ->delayForMinutes(10)
@@ -291,4 +295,3 @@ it('will not save anything if attributes are not changed', function () {
     expect(TestModel::first())->name->toBe('John Doe');
     expect(PendingUpdate::count())->toBe(0);
 });
-
