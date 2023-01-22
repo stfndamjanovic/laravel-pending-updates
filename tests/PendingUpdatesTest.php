@@ -282,3 +282,13 @@ it('will not save guarded attributes', function () {
     expect(TestModel::first())->secret->toBe('hash');
     expect(PendingUpdate::count())->toBe(0);
 });
+
+it('will not save anything if attributes are not changed', function () {
+    $this->model->postpone()
+        ->keepForMinutes(3)
+        ->update(['name' => 'John Doe']);
+
+    expect(TestModel::first())->name->toBe('John Doe');
+    expect(PendingUpdate::count())->toBe(0);
+});
+

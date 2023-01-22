@@ -177,7 +177,9 @@ class Postponer
     {
         [$startAt, $revertAt] = $this->getTimeStamps();
 
-        $pendingAttributes = array_intersect_key($attributes, array_flip($this->model->getFillable()));
+        $this->model->fill($attributes);
+
+        $pendingAttributes = $this->model->getDirty();
 
         if (! $startAt) {
             $pendingAttributes = array_intersect_key($this->model->getOriginal(), $pendingAttributes);
