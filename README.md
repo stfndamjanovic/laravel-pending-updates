@@ -29,14 +29,14 @@ composer require stfn/laravel-pending-updates
 You can publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-pending-updates-migrations"
+php artisan vendor:publish --tag="pending-updates-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-pending-updates-config"
+php artisan vendor:publish --tag="pending-updates-config"
 ```
 
 This is the contents of the published config file:

@@ -306,3 +306,12 @@ it('will not save anything to postponed_updates if model update fail', function 
     expect($this->model->fresh())->name->toBe('John Doe');
     expect(PendingUpdate::count())->toBe(0);
 });
+
+it('will not save guarded attributes', function () {
+    $this->model->postpone()
+        ->keepForMinutes(3)
+        ->update(['secret' => 'new-value']);
+
+    expect(TestModel::first())->secret->toBe('hash');
+    expect(PendingUpdate::count())->toBe(0);
+});

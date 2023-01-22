@@ -177,11 +177,15 @@ class Postponer
     {
         [$startAt, $revertAt] = $this->getTimeStamps();
 
-        $pendingAttributes = $attributes;
+        $pendingAttributes = array_intersect_key($attributes, array_flip($this->model->getFillable()));
 
         if (! $startAt) {
-            $pendingAttributes = array_intersect_key($this->model->getOriginal(), $attributes);
+            $pendingAttributes = array_intersect_key($this->model->getOriginal(), $pendingAttributes);
             $this->model->update($attributes, $options);
+        }
+
+        if (!$pendingAttributes) {
+            return false;
         }
 
         // If pending update already exists, remove that one and create another one
@@ -194,5 +198,7 @@ class Postponer
             'start_at' => $startAt,
             'revert_at' => $revertAt,
         ]);
+
+        return true;
     }
 }

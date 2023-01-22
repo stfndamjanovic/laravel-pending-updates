@@ -14,8 +14,5 @@ class TestModel extends Model
         'password',
     ];
 
-    public $fillable = [
-        'name',
-        'secret',
-    ];
+    public $fillable = ['name'];
 }
