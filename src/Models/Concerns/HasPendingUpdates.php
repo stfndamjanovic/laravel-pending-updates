@@ -3,7 +3,7 @@
 namespace Stfn\PendingUpdates\Models\Concerns;
 
 use Illuminate\Database\Eloquent\Model;
-use Stfn\PendingUpdates\Support\PendingFactory;
+use Stfn\PendingUpdates\Support\Postponer;
 
 /** @mixin Model */
 trait HasPendingUpdates
@@ -20,9 +20,9 @@ trait HasPendingUpdates
         return $this->morphOne($this->getPendingUpdateModelClassName(), 'parent');
     }
 
-    public function pending()
+    public function postpone()
     {
-        return new PendingFactory($this);
+        return new Postponer($this);
     }
 
     protected function getPendingUpdateModelClassName()

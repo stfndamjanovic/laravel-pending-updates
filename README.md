@@ -10,7 +10,7 @@ When updating an Eloquent model, by using this package, you can postpone updatin
 ```php
 $news = News::find(1);
 
-$news->pending()
+$news->postpone()
     ->startFrom('2023-01-01 00:00:00')
     ->keepForHours(24)
     ->update(['is_active' => true]);
@@ -83,17 +83,17 @@ By using keep for, update will be performed at the moment, but package will reve
 $ticket = Ticket::find(1);
 
 // Update ticket price to 200 and keep it updated for 60 minutes.
-$ticket->pending()
+$ticket->postpone()
     ->keepForMinutes(60)
     ->update(['price' => 200]);
     
 // Update ticket price to 200 and keep it updated for 12 hours.
-$ticket->pending()
+$ticket->postpone()
     ->keepForHours(12)
     ->update(['price' => 200]);
 
 // Update ticket price to 200 and keep it updated for 3 days.
-$ticket->pending()
+$ticket->postpone()
     ->keepForDays(3)
     ->update(['price' => 200]);
 ```
@@ -106,17 +106,17 @@ By using delay for, update will be performed later, after specific number of min
 $ticket = Ticket::find(1);
 
 // Update ticket price to 200 after 60 minutes from now and keep it like that for unlimited time.
-$ticket->pending()
+$ticket->postpone()
     ->dalayForMinutes(60)
     ->update(['price' => 200]);
 
 // Update ticket price to 200 after 12 hours from now and keep it like that for unlimited time.
-$ticket->pending()
+$ticket->postpone()
     ->dalayForHours(12)
     ->update(['price' => 200]);
 
 // Update ticket price to 200 after 3 days from now and keep it like that for unlimited time.
-$ticket->pending()
+$ticket->postpone()
     ->dalayForDays(3)
     ->update(['price' => 200]);
 ```
@@ -129,17 +129,17 @@ You can also use timestamps to specify exact time when you want to update some m
 $product = Product::find(1);
 
 // Update product to be unavailable from 1st January.
-$product->pending()
+$product->postpone()
     ->startFrom("2023-01-01 00:00:00")
     ->update(['is_available' => false]);
 
 // Update product to be unavailable until 4th January.
-$product->pending()
+$product->postpone()
     ->revertAt("2023-04-01 00:00:00")
     ->update(['is_available' => false]);
 
 // Update product to be unavailable from 1st January to 4th January.
-$product->pending()
+$product->postpone()
     ->startFrom("2023-01-01 00:00:00")
     ->revertAt("2023-04-01 00:00:00")
     ->update(['is_available' => false]);
@@ -152,13 +152,13 @@ A combination of specific minutes, hours, or days with timestamps is also possib
 $product = Product::find(1);
 
 // Update product to be unavailable from 1st January and keep that state for 1 day.
-$product->pending()
+$product->postpone()
     ->startFrom("2023-01-01 00:00:00")
     ->keepForDays(1)
     ->update(['is_available' => false]);
 
 // Update product to became unavailable after 60 minutes from now and keep that state until 4th January.
-$product->pending()
+$product->postpone()
     ->delayForMinutes(60)
     ->revertAt("2023-04-01 00:00:00")
     ->update(['price' => 200]);

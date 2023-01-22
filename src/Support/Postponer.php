@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Stfn\PendingUpdates\Exceptions\InvalidPendingParametersException;
 
-class PendingFactory
+class Postponer
 {
     const DATE_FORMAT = 'Y-m-d H:i:s';
 

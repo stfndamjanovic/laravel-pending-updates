@@ -19,7 +19,7 @@ beforeEach(function () {
 });
 
 it('can keep model updated for specific number of minutes', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->keepForMinutes(3)
         ->update(['name' => 'Stefan']);
 
@@ -34,7 +34,7 @@ it('can keep model updated for specific number of minutes', function () {
 });
 
 it('can keep model updated for specific number of hours', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->keepForHours(3)
         ->update(['name' => 'Stefan']);
 
@@ -49,7 +49,7 @@ it('can keep model updated for specific number of hours', function () {
 });
 
 it('can keep model updated for specific number of days', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->keepForDays(3)
         ->update(['name' => 'Stefan']);
 
@@ -64,7 +64,7 @@ it('can keep model updated for specific number of days', function () {
 });
 
 it('can postpone the update for specific number of minutes', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->delayForMinutes(10)
         ->update(['name' => 'Stefan']);
 
@@ -79,7 +79,7 @@ it('can postpone the update for specific number of minutes', function () {
 });
 
 it('can postpone the update for specific number of hours', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->delayForHours(12)
         ->update(['name' => 'Stefan']);
 
@@ -94,7 +94,7 @@ it('can postpone the update for specific number of hours', function () {
 });
 
 it('can postpone the update for specific number of days', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->delayForDays(6)
         ->update(['name' => 'Stefan']);
 
@@ -109,7 +109,7 @@ it('can postpone the update for specific number of days', function () {
 });
 
 it('can postpone the update for specific number of minutes and keep it updated for some time', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->delayForMinutes(10)
         ->keepForHours(3)
         ->update(['name' => 'Stefan']);
@@ -125,7 +125,7 @@ it('can postpone the update for specific number of minutes and keep it updated f
 });
 
 it('can use timestamp for start at', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->startFrom('2023-01-01 00:10:00')
         ->update(['name' => 'Stefan']);
 
@@ -140,7 +140,7 @@ it('can use timestamp for start at', function () {
 });
 
 it('can use timestamp for revert at', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->revertAt('2023-01-01 00:10:00')
         ->update(['name' => 'Stefan']);
 
@@ -155,7 +155,7 @@ it('can use timestamp for revert at', function () {
 });
 
 it('can use timestamp for start at and revert at', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->startFrom('2023-01-01 00:10:00')
         ->revertAt('2023-01-01 03:10:00')
         ->update(['name' => 'Stefan']);
@@ -171,7 +171,7 @@ it('can use timestamp for start at and revert at', function () {
 });
 
 it('can use timestamp in reverse order for start at and revert at', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->revertAt('2023-01-01 03:10:00')
         ->startFrom('2023-01-01 00:10:00')
         ->update(['name' => 'Stefan']);
@@ -187,7 +187,7 @@ it('can use timestamp in reverse order for start at and revert at', function () 
 });
 
 it('can use combination of timestamp and time definition', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->startFrom('2023-01-01 00:10:00')
         ->keepForDays(3)
         ->update(['name' => 'Stefan']);
@@ -205,7 +205,7 @@ it('can use combination of timestamp and time definition', function () {
 it('will not touch the model if the update is postponed', function () {
     testTime()->freeze('2023-01-01 03:00:00');
 
-    $this->model->pending()
+    $this->model->postpone()
         ->delayForMinutes(3)
         ->update(['name' => 'Stefan']);
 
@@ -215,7 +215,7 @@ it('will not touch the model if the update is postponed', function () {
 it('will touch the model if the update is not postponed', function () {
     testTime()->freeze('2023-01-01 03:00:00');
 
-    $this->model->pending()
+    $this->model->postpone()
         ->keepForMinutes(3)
         ->update(['name' => 'Stefan']);
 
@@ -230,7 +230,7 @@ it('will not change behavior of update without postpone', function () {
 });
 
 it('will delete postponed updates on model delete', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->delayForMinutes(10)
         ->update(['name' => 'Stefan']);
 
@@ -242,7 +242,7 @@ it('will delete postponed updates on model delete', function () {
 });
 
 it('will override previous postponed update with the new one', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->keepForHours(3)
         ->delayForMinutes(10)
         ->update(['name' => 'Stefan']);
@@ -254,7 +254,7 @@ it('will override previous postponed update with the new one', function () {
         ->revert_at->toBe('2023-01-01 03:10:00')
         ->values->toBe(['name' => 'Stefan']);
 
-    $this->model->pending()
+    $this->model->postpone()
         ->delayForHours(3)
         ->update(['name' => 'Dragan']);
 
@@ -269,7 +269,7 @@ it('will override previous postponed update with the new one', function () {
 });
 
 it('can use different date format', function () {
-    $this->model->pending()
+    $this->model->postpone()
         ->startFrom('2023/12/31 00:00:00')
         ->update(['name' => 'Stefan']);
 
@@ -279,7 +279,7 @@ it('can use different date format', function () {
 
 it('will not save anything to postponed_updates if model update fail', function () {
     try {
-        $this->model->pending()
+        $this->model->postpone()
             ->keepForMinutes(10)
             ->update(['name' => null]);
     } catch (QueryException $exception) {
@@ -289,7 +289,7 @@ it('will not save anything to postponed_updates if model update fail', function 
     expect(PendingUpdate::count())->toBe(0);
 
     try {
-        $this->model->pending()
+        $this->model->postpone()
             ->delayForMinutes(10)
             ->update(['name' => null]);
     } catch (QueryException $exception) {
