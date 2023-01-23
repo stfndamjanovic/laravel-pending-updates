@@ -1,4 +1,4 @@
-# Postpone model updates or temporary keep them updated for some time 
+# Postpone model updates or temporarily keep them updated for some time
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/stfn/laravel-pending-updates.svg?style=flat-square)](https://packagist.org/packages/stfn/laravel-pending-updates)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/stfndamjanovic/laravel-pending-updates/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/stfndamjanovic/laravel-pending-updates/actions?query=workflow%3Arun-tests+branch%3Amain)
