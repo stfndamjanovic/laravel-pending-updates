@@ -190,6 +190,26 @@ class Ticket extends Model
     }
 }
 ```
+Keep in mind that those fields also need to be fillable.
+
+Sometimes scheduled update may fail, for various reasons.
+By default, the package will send that exception to your configured external
+report service like Sentry, Flare, or Bugsnag and after that,
+the record from the `pending_updates` table will be removed. If you want to change this behavior, you can
+override the `updateCannotBeApplied` method on the `PendingUpdateModel`.
+
+```php
+use Illuminate\Database\Eloquent\Model;
+use Stfn\PendingUpdates\Models\PendingUpdate;
+
+class CustomPendingUpdate extends PendingUpdate
+{    
+    public function updateCannotBeApplied($exception, $model)
+    {
+        // Your custom logic here
+    }
+}
+```
 
 ## Testing
 

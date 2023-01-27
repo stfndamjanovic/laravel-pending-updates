@@ -191,7 +191,7 @@ class Postponer
 
         [$startAt, $revertAt] = $this->get();
 
-        $this->model->forceFill($attributes);
+        $this->model->fill($attributes);
 
         $pendingAttributes = $this->model->getDirty();
 

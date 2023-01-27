@@ -37,7 +37,9 @@ class PendingUpdate extends Model
         try {
             $this->revertParentModel();
         } catch (\Exception $exception) {
-            report($exception);
+            $this->updateCannotBeApplied($exception, $this->parent);
+
+            return;
         }
 
         $this->delete();
@@ -56,8 +58,7 @@ class PendingUpdate extends Model
         try {
             $this->revertParentModel();
         } catch (\Exception $exception) {
-            report($exception);
-            $this->delete();
+            $this->updateCannotBeApplied($exception, $this->parent);
 
             return;
         }
@@ -89,5 +90,12 @@ class PendingUpdate extends Model
     public function shouldApply()
     {
         return Carbon::now()->gt($this->start_at);
+    }
+
+    public function updateCannotBeApplied($exception, $model)
+    {
+        report($exception);
+
+        $this->delete();
     }
 }

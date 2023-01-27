@@ -17,13 +17,13 @@ class CheckPendingUpdates extends Command
         $model::where('start_at', '<=', now())
             ->orWhere('revert_at', '<=', now())
             ->get()
-            ->each(function ($action) {
-                if ($action->shouldRevert()) {
-                    $action->revert();
+            ->each(function ($pendingUpdate) {
+                if ($pendingUpdate->shouldRevert()) {
+                    $pendingUpdate->revert();
                 }
 
-                if ($action->shouldApply()) {
-                    $action->apply();
+                if ($pendingUpdate->shouldApply()) {
+                    $pendingUpdate->apply();
                 }
             });
 
