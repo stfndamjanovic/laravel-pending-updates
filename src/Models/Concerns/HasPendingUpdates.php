@@ -6,18 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 use Stfn\PendingUpdates\Support\Postponer;
 
 /** @mixin Model */
-trait HasPendingUpdate
+trait HasPendingUpdates
 {
-    public static function bootHasPendingUpdate(): void
+    public static function bootHasPendingUpdates(): void
     {
         static::deleted(function (Model $model) {
-            $model->pendingUpdate()->delete();
+            $model->pendingUpdates()->delete();
         });
     }
 
-    public function pendingUpdate()
+    public function pendingUpdates()
     {
-        return $this->morphOne($this->getPendingUpdateModelClass(), 'parent');
+        return $this->morphMany($this->getPendingUpdateModelClass(), 'parent');
     }
 
     public function postpone()
@@ -30,9 +30,9 @@ trait HasPendingUpdate
         return config('pending-updates.model');
     }
 
-    public function hasPendingUpdate()
+    public function hasPendingUpdates()
     {
-        return $this->pendingUpdate()->exists();
+        return $this->pendingUpdates()->exists();
     }
 
     public function allowedPendingAttributes()

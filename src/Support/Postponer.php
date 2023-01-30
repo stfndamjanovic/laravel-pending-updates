@@ -180,14 +180,7 @@ class Postponer
 
     public function update(array $attributes = [], array $options = [])
     {
-        $disallowedAttributes = array_diff(
-            array_keys($attributes),
-            $this->model->allowedPendingAttributes()
-        );
-
-        if (! empty($disallowedAttributes)) {
-            throw InvalidAttributeException::create();
-        }
+        $this->validatePendingAttributes($attributes);
 
         [$startAt, $revertAt] = $this->get();
 
@@ -204,17 +197,24 @@ class Postponer
             return false;
         }
 
-        // If pending update already exists, remove that one and create another one
-        if ($this->model->hasPendingUpdate()) {
-            $this->model->pendingUpdate()->delete();
-        }
-
-        $this->model->pendingUpdate()->create([
+        $this->model->pendingUpdates()->create([
             'values' => $pendingAttributes,
             'start_at' => $startAt,
             'revert_at' => $revertAt,
         ]);
 
         return true;
+    }
+
+    protected function validatePendingAttributes($attributes)
+    {
+        $disallowedAttributes = array_diff(
+            array_keys($attributes),
+            $this->model->allowedPendingAttributes()
+        );
+
+        if (! empty($disallowedAttributes)) {
+            throw InvalidAttributeException::create();
+        }
     }
 }

@@ -242,7 +242,7 @@ it('will delete pending updates on model delete', function () {
     expect(PendingUpdate::count())->toBe(0);
 });
 
-it('will override previous pending update with the new one', function () {
+it('can have more than one pending updates', function () {
     $this->model->postpone()
         ->keepForHours(3)
         ->delayForMinutes(10)
@@ -259,9 +259,9 @@ it('will override previous pending update with the new one', function () {
         ->delayForHours(3)
         ->update(['name' => 'Henry']);
 
-    expect(PendingUpdate::count())->toBe(1);
+    expect(PendingUpdate::count())->toBe(2);
 
-    expect(PendingUpdate::first())
+    expect(PendingUpdate::get()[1])
         ->start_at->toBe('2023-01-01 03:00:00')
         ->revert_at->toBeNull()
         ->values->toBe(['name' => 'Henry']);
