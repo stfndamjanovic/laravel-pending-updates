@@ -13,19 +13,31 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PendingUpdate extends Model
 {
-    public $guarded = [];
+    /**
+     * @var array $guarded
+     */
+    public array $guarded = [];
 
-    public $casts = [
+    /**
+     * @var string[] $casts
+     */
+    public array $casts = [
         'values' => 'array',
     ];
 
-    public $table = 'pending_updates';
+    public string $table = 'pending_updates';
 
+    /**
+     * @return mixed
+     */
     public function parent()
     {
         return $this->morphTo();
     }
 
+    /**
+     * @return void
+     */
     public function revert()
     {
         if (! $this->parent instanceof Model) {
@@ -45,6 +57,9 @@ class PendingUpdate extends Model
         $this->delete();
     }
 
+    /**
+     * @return void
+     */
     public function apply()
     {
         if (! $this->parent instanceof Model) {
@@ -72,26 +87,43 @@ class PendingUpdate extends Model
         $this->update(['start_at' => null, 'values' => $parentAttributes]);
     }
 
+    /**
+     * @return mixed
+     */
     public function getParentAttributes()
     {
         return $this->parent->getAttributes();
     }
 
+    /**
+     * @return mixed
+     */
     protected function revertParentModel()
     {
         return $this->parent->forceFill($this->values)->save();
     }
 
+    /**
+     * @return mixed
+     */
     public function shouldRevert()
     {
         return Carbon::now()->gt($this->revert_at);
     }
 
+    /**
+     * @return mixed
+     */
     public function shouldApply()
     {
         return Carbon::now()->gt($this->start_at);
     }
 
+    /**
+     * @param $exception
+     * @param $model
+     * @return void
+     */
     public function updateCannotBeApplied($exception, $model)
     {
         report($exception);

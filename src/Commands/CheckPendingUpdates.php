@@ -6,10 +6,13 @@ use Illuminate\Console\Command;
 
 class CheckPendingUpdates extends Command
 {
-    public $signature = 'pending-updates:check';
+    public string $signature = 'pending-updates:check';
 
-    public $description = 'Check pending updates and revert to the original tables';
+    public string $description = 'Check pending updates and revert to the original tables';
 
+    /**
+     * @return int
+     */
     public function handle(): int
     {
         $model = config('pending-updates.model');

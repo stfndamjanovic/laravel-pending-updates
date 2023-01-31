@@ -21,41 +21,79 @@ class Postponer
 
     protected $revertAt;
 
+    /**
+     * @param Model $model
+     */
     public function __construct(Model $model)
     {
         $this->model = $model;
     }
 
+    /**
+     * @param int $minutes
+     * @return $this
+     * @throws InvalidPendingParametersException
+     */
     public function keepForMinutes(int $minutes)
     {
         return $this->setKeepForProperty($this->minutesToSeconds($minutes));
     }
 
+    /**
+     * @param int $hours
+     * @return $this
+     * @throws InvalidPendingParametersException
+     */
     public function keepForHours(int $hours)
     {
         return $this->setKeepForProperty($this->hoursToSeconds($hours));
     }
 
+    /**
+     * @param int $days
+     * @return $this
+     * @throws InvalidPendingParametersException
+     */
     public function keepForDays(int $days)
     {
         return $this->setKeepForProperty($this->daysToSeconds($days));
     }
 
+    /**
+     * @param int $minutes
+     * @return $this
+     * @throws InvalidPendingParametersException
+     */
     public function delayForMinutes(int $minutes)
     {
         return $this->setDelayForProperty($this->minutesToSeconds($minutes));
     }
 
+    /**
+     * @param int $hours
+     * @return $this
+     * @throws InvalidPendingParametersException
+     */
     public function delayForHours(int $hours)
     {
         return $this->setDelayForProperty($this->hoursToSeconds($hours));
     }
 
+    /**
+     * @param int $days
+     * @return $this
+     * @throws InvalidPendingParametersException
+     */
     public function delayForDays(int $days)
     {
         return $this->setDelayForProperty($this->daysToSeconds($days));
     }
 
+    /**
+     * @param string $timestamp
+     * @return $this
+     * @throws InvalidPendingParametersException
+     */
     public function startFrom(string $timestamp)
     {
         $date = Carbon::parse($timestamp);
@@ -71,6 +109,11 @@ class Postponer
         return $this;
     }
 
+    /**
+     * @param string $timestamp
+     * @return $this
+     * @throws InvalidPendingParametersException
+     */
     public function revertAt(string $timestamp)
     {
         $date = Carbon::parse($timestamp);
@@ -86,6 +129,11 @@ class Postponer
         return $this;
     }
 
+    /**
+     * @param Carbon $timestamp
+     * @return void
+     * @throws InvalidPendingParametersException
+     */
     protected function validateTimestamp(Carbon $timestamp)
     {
         if ($timestamp->isPast()) {
@@ -93,6 +141,11 @@ class Postponer
         }
     }
 
+    /**
+     * @param int $seconds
+     * @return $this
+     * @throws InvalidPendingParametersException
+     */
     protected function setDelayForProperty(int $seconds)
     {
         if ($this->delayFor) {
@@ -108,6 +161,11 @@ class Postponer
         return $this;
     }
 
+    /**
+     * @param int $seconds
+     * @return $this
+     * @throws InvalidPendingParametersException
+     */
     protected function setKeepForProperty(int $seconds)
     {
         if ($this->keepFor) {
@@ -123,21 +181,37 @@ class Postponer
         return $this;
     }
 
+    /**
+     * @param int $minutes
+     * @return float|int
+     */
     protected function minutesToSeconds(int $minutes)
     {
         return $minutes * 60;
     }
 
+    /**
+     * @param int $hours
+     * @return float|int
+     */
     protected function hoursToSeconds(int $hours)
     {
         return $hours * 60 * 60;
     }
 
+    /**
+     * @param int $days
+     * @return float|int
+     */
     protected function daysToSeconds(int $days)
     {
         return $days * 60 * 60 * 24;
     }
 
+    /**
+     * @return array
+     * @throws InvalidPendingParametersException
+     */
     protected function get()
     {
         if ($this->startAt && $this->delayFor) {
@@ -178,6 +252,13 @@ class Postponer
         return [$startAt, $revertAt];
     }
 
+    /**
+     * @param array $attributes
+     * @param array $options
+     * @return bool
+     * @throws InvalidAttributeException
+     * @throws InvalidPendingParametersException
+     */
     public function update(array $attributes = [], array $options = [])
     {
         $this->validatePendingAttributes($attributes);
@@ -206,6 +287,11 @@ class Postponer
         return true;
     }
 
+    /**
+     * @param $attributes
+     * @return void
+     * @throws InvalidAttributeException
+     */
     protected function validatePendingAttributes($attributes)
     {
         $disallowedAttributes = array_diff(
