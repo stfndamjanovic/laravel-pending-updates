@@ -114,17 +114,17 @@ $ticket = Ticket::find(1);
 
 // Update ticket price to 200 after 60 minutes from now and keep it like that for unlimited time.
 $ticket->postpone()
-    ->dalayForMinutes(60)
+    ->delayForMinutes(60)
     ->update(['price' => 200]);
 
 // Update ticket price to 200 after 12 hours from now and keep it like that for unlimited time.
 $ticket->postpone()
-    ->dalayForHours(12)
+    ->delayForHours(12)
     ->update(['price' => 200]);
 
 // Update ticket price to 200 after 3 days from now and keep it like that for unlimited time.
 $ticket->postpone()
-    ->dalayForDays(3)
+    ->delayForDays(3)
     ->update(['price' => 200]);
 ```
 
