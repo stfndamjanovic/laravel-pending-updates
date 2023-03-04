@@ -10,6 +10,10 @@ use Stfn\PendingUpdates\Models\PendingUpdate;
 
 class PendingUpdateServiceProvider extends PackageServiceProvider
 {
+    /**
+     * @param Package $package
+     * @return void
+     */
     public function configurePackage(Package $package): void
     {
         $package
@@ -19,7 +23,11 @@ class PendingUpdateServiceProvider extends PackageServiceProvider
             ->hasCommand(CheckPendingUpdates::class);
     }
 
-    public function packageBooted()
+    /**
+     * @return void
+     * @throws InvalidPendingUpdateModel
+     */
+    public function packageBooted(): void
     {
         $model = config('pending-updates.model');
 
